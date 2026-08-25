@@ -1,0 +1,75 @@
+﻿@using UstediPametno.Models
+@model CiljStednje
+
+@{
+    ViewData["Title"] = "Dodaj cilj štednje";
+}
+
+<h1>Dodaj cilj štednje</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Create" method="post">
+
+            <div asp-validation-summary="All"
+                 class="text-danger">
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Naziv" class="form-label">
+                    Naziv cilja
+                </label>
+
+                <input asp-for="Naziv"
+                       class="form-control" />
+
+                <span asp-validation-for="Naziv"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CiljaniIznos" class="form-label">
+                    Ciljani iznos
+                </label>
+
+                <input asp-for="CiljaniIznos"
+                       class="form-control" />
+
+                <span asp-validation-for="CiljaniIznos"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DatumZavrsetka" class="form-label">
+                    Rok ostvarenja cilja
+                </label>
+
+                <input asp-for="DatumZavrsetka"
+                       type="date"
+                       class="form-control" />
+
+                <span asp-validation-for="DatumZavrsetka"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Dodaj
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Nazad
+            </a>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

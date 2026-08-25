@@ -1,0 +1,81 @@
+﻿@using UstediPametno.ViewModels
+@model UplataNaCiljViewModel
+
+@{
+    ViewData["Title"] = "Uplata na cilj";
+}
+
+<h1>Uplata na cilj</h1>
+
+<hr />
+
+<div class="card mb-4">
+    <div class="card-body">
+
+        <h4 class="card-title">
+            @Model.Naziv
+        </h4>
+
+        <p>
+            Ciljani iznos:
+            <strong>
+                @Model.CiljaniIznos.ToString("N2") KM
+            </strong>
+        </p>
+
+        <p>
+            Trenutno ušteđeno:
+            <strong>
+                @Model.TrenutnoUstedjeno.ToString("N2") KM
+            </strong>
+        </p>
+
+        <p>
+            Preostalo:
+            <strong>
+                @Model.PreostaliIznos.ToString("N2") KM
+            </strong>
+        </p>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Uplata" method="post">
+
+            <div asp-validation-summary="All"
+                 class="text-danger">
+            </div>
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Iznos" class="form-label">
+                    Iznos uplate
+                </label>
+
+                <input asp-for="Iznos"
+                       class="form-control" />
+
+                <span asp-validation-for="Iznos"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <button type="submit" class="btn btn-success">
+                Uplati
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Odustani
+            </a>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

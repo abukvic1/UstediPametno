@@ -1,0 +1,78 @@
+﻿@using UstediPametno.Models
+@model Transakcija
+
+@{
+    ViewData["Title"] = "Obriši transakciju";
+
+    string vrstaTekst = Model.Vrsta switch
+    {
+        VrstaTransakcije.Prihod =>
+            "Prihod",
+
+        VrstaTransakcije.FiksniTrosak =>
+            "Fiksni trošak",
+
+        VrstaTransakcije.DnevnaPotrosnja =>
+            "Dnevna potrošnja",
+
+        VrstaTransakcije.UplataStednje =>
+            "Uplata štednje",
+
+        _ => Model.Vrsta.ToString()
+    };
+}
+
+<h1>Obriši transakciju</h1>
+
+<div class="alert alert-warning">
+    Jesi li sigurna da želiš obrisati ovu transakciju?
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">
+        Datum
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.Datum.ToString("dd.MM.yyyy.")
+    </dd>
+
+    <dt class="col-sm-3">
+        Opis
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.Opis
+    </dd>
+
+    <dt class="col-sm-3">
+        Vrsta
+    </dt>
+
+    <dd class="col-sm-9">
+        @vrstaTekst
+    </dd>
+
+    <dt class="col-sm-3">
+        Iznos
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.Iznos.ToString("N2") KM
+    </dd>
+</dl>
+
+<form asp-action="Delete"
+      asp-route-id="@Model.Id"
+      method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <button type="submit" class="btn btn-danger">
+        Obriši
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Odustani
+    </a>
+</form>

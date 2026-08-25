@@ -1,0 +1,44 @@
+﻿@model UstediPametno.Models.IzvorPrihoda
+
+@{
+    ViewData["Title"] = "Obriši izvor prihoda";
+}
+
+<h1>Obriši izvor prihoda</h1>
+
+<div class="alert alert-warning">
+    Jesi li sigurna da želiš obrisati ovaj izvor prihoda?
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">
+        Naziv izvora prihoda
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.Naziv
+    </dd>
+
+    <dt class="col-sm-3">
+        Mjesečni iznos
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.MjesecniIznos.ToString("N2") KM
+    </dd>
+</dl>
+
+<form asp-action="Delete"
+      asp-route-id="@Model.Id"
+      method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <button type="submit" class="btn btn-danger">
+        Obriši
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Odustani
+    </a>
+</form>

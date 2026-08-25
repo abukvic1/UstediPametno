@@ -1,0 +1,108 @@
+﻿@model IEnumerable<UstediPametno.Models.Korisnik>
+
+@{
+    ViewData["Title"] = "Korisnici";
+}
+
+<div class="page-title d-flex justify-content-between align-items-center">
+
+    <div>
+        <h1>Korisnici</h1>
+        <p>Pregled svih registrovanih korisnika aplikacije.</p>
+    </div>
+
+    <a asp-controller="Admin"
+       asp-action="Index"
+       class="btn btn-outline-primary">
+
+        <i class="bi bi-arrow-left me-1"></i>
+        Admin panel
+
+    </a>
+
+</div>
+
+
+<div class="table-container">
+
+    <div class="table-responsive">
+
+        <table class="table align-middle">
+
+            <thead>
+                <tr>
+                    <th>Korisnik</th>
+                    <th>Email</th>
+                    <th>Datum registracije</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @if (Model.Any())
+                {
+                    @foreach (var korisnik in Model)
+                    {
+                        <tr>
+
+                            <td>
+
+                                <div class="d-flex align-items-center gap-3">
+
+                                    <div class="admin-user-avatar">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            @(string.IsNullOrWhiteSpace(korisnik.ImePrezime)
+                                                ? "Korisnik"
+                                                : korisnik.ImePrezime)
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                @korisnik.Email
+                            </td>
+
+                            <td>
+                                @korisnik.DatumKreiranja.ToString("dd.MM.yyyy. HH:mm")
+                            </td>
+
+                            <td>
+                                <span class="admin-status-active">
+                                    Aktivan
+                                </span>
+                            </td>
+
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+
+                        <td colspan="4"
+                            class="text-center py-5 text-muted">
+
+                            Trenutno nema registrovanih korisnika.
+
+                        </td>
+
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>

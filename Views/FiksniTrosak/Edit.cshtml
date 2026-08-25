@@ -1,0 +1,89 @@
+﻿@using UstediPametno.Models
+@model FiksniTrosak
+
+@{
+    ViewData["Title"] = "Izmijeni fiksni trošak";
+}
+<h1>Izmijeni fiksni trošak</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Edit"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            <div asp-validation-summary="All"
+                 class="text-danger">
+            </div>
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Naziv" class="form-label">
+                    Naziv troška
+                </label>
+
+                <input asp-for="Naziv"
+                       class="form-control" />
+
+                <span asp-validation-for="Naziv"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Kategorija" class="form-label">
+                    Kategorija
+                </label>
+
+                <select asp-for="Kategorija"
+                        asp-items="Html.GetEnumSelectList<KategorijaTroska>()"
+                        class="form-select">
+                </select>
+
+                <span asp-validation-for="Kategorija"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MjesecniIznos" class="form-label">
+                    Mjesečni iznos
+                </label>
+
+                <input asp-for="MjesecniIznos"
+                       class="form-control" />
+
+                <span asp-validation-for="MjesecniIznos"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="form-check mb-3">
+                <input asp-for="JeAktivan"
+                       class="form-check-input" />
+
+                <label asp-for="JeAktivan"
+                       class="form-check-label">
+                    Aktivan trošak
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Sačuvaj
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Nazad
+            </a>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

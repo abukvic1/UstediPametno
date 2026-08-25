@@ -1,0 +1,179 @@
+﻿@using UstediPametno.Models
+@model IEnumerable<UstediPametno.ViewModels.TransakcijaPrikazViewModel>
+
+@{
+    ViewData["Title"] = "Transakcije";
+}
+
+@if (TempData["Greska"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Greska"]
+    </div>
+}
+
+<div class="page-title">
+    <h1>Transakcije</h1>
+    <p>Pregled svih prihoda, troškova i uplata štednje.</p>
+</div>
+
+<p>
+    <a asp-action="Create"
+       class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>
+        Dodaj novu transakciju
+    </a>
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Još uvijek nemaš evidentiranih transakcija.
+    </div>
+}
+else
+{
+    <div class="table-container">
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Datum</th>
+                        <th>Opis</th>
+                        <th>Vrsta</th>
+                        <th>Iznos</th>
+                        <th>Mjesečni plan</th>
+                        <th>Cilj štednje</th>
+                        <th>Akcije</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var transakcija in Model)
+                    {
+                        string vrstaTekst =
+                            transakcija.Vrsta switch
+                            {
+                                VrstaTransakcije.Prihod =>
+                                    "Prihod",
+
+                                VrstaTransakcije.FiksniTrosak =>
+                                    "Fiksni trošak",
+
+                                VrstaTransakcije.DnevnaPotrosnja =>
+                                    "Dnevna potrošnja",
+
+                                VrstaTransakcije.UplataStednje =>
+                                    "Uplata štednje",
+
+                                _ =>
+                                    transakcija.Vrsta.ToString()
+                            };
+
+                        bool jestePrihod =
+                            transakcija.Vrsta ==
+                            VrstaTransakcije.Prihod;
+
+                        bool jesteUplataStednje =
+                            transakcija.Vrsta ==
+                            VrstaTransakcije.UplataStednje;
+
+                        string bojaIznosa =
+                            jestePrihod
+                                ? "amount-income"
+                                : jesteUplataStednje
+                                    ? "amount-saving"
+                                    : "amount-expense";
+
+                        <tr>
+
+                            <td>
+                                @transakcija.Datum.ToString("dd.MM.yyyy.")
+                            </td>
+
+                            <td>
+                                <strong>
+                                    @transakcija.Opis
+                                </strong>
+                            </td>
+
+                            <td>
+                                @vrstaTekst
+                            </td>
+
+                            <td class="@bojaIznosa">
+                                @if (jestePrihod)
+                                {
+                                    <span>+</span>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+
+                                @transakcija.Iznos.ToString("N2") KM
+                            </td>
+
+                            <td>
+                                @if (transakcija.NazivPlana == "Nema plana")
+                                {
+                                    <span class="text-muted">
+                                        Nema plana
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span>
+                                        @transakcija.NazivPlana
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                @if (transakcija.NazivCilja == "-")
+                                {
+                                    <span class="text-muted">
+                                        -
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge-saving">
+                                        @transakcija.NazivCilja
+                                    </span>
+                                }
+                            </td>
+
+                            <td class="text-nowrap">
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@transakcija.Id"
+                                   class="btn btn-warning btn-sm">
+
+                                    <i class="bi bi-pencil me-1"></i>
+                                    Izmijeni
+                                </a>
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@transakcija.Id"
+                                   class="btn btn-danger btn-sm">
+
+                                    <i class="bi bi-trash me-1"></i>
+                                    Obriši
+                                </a>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+}

@@ -1,0 +1,204 @@
+﻿@{
+    ViewData["Title"] = "Admin panel";
+}
+
+<div class="page-title">
+    <h1>Admin panel</h1>
+    <p>Pregled stanja aplikacije UštediPametno.</p>
+</div>
+
+<div class="row g-4 mb-4">
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card dashboard-card h-100">
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-start">
+
+                    <div>
+                        <p class="text-muted mb-2">
+                            Korisnici
+                        </p>
+
+                        <h2 class="mb-0">
+                            @ViewBag.BrojKorisnika
+                        </h2>
+                    </div>
+
+                    <div class="dashboard-icon saving-icon">
+                        <i class="bi bi-people"></i>
+                    </div>
+
+                </div>
+
+                <small class="text-muted">
+                    Registrovani korisnici
+                </small>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card dashboard-card h-100">
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-start">
+
+                    <div>
+                        <p class="text-muted mb-2">
+                            Transakcije
+                        </p>
+
+                        <h2 class="mb-0">
+                            @ViewBag.BrojTransakcija
+                        </h2>
+                    </div>
+
+                    <div class="dashboard-icon expense-icon">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </div>
+
+                </div>
+
+                <small class="text-muted">
+                    Ukupan broj transakcija
+                </small>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card dashboard-card h-100">
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-start">
+
+                    <div>
+                        <p class="text-muted mb-2">
+                            Ciljevi štednje
+                        </p>
+
+                        <h2 class="mb-0">
+                            @ViewBag.BrojCiljeva
+                        </h2>
+                    </div>
+
+                    <div class="dashboard-icon income-icon">
+                        <i class="bi bi-bullseye"></i>
+                    </div>
+
+                </div>
+
+                <small class="text-muted">
+                    Ukupan broj ciljeva
+                </small>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card dashboard-card h-100">
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-start">
+
+                    <div>
+                        <p class="text-muted mb-2">
+                            Mjesečni planovi
+                        </p>
+
+                        <h2 class="mb-0">
+                            @ViewBag.BrojPlanova
+                        </h2>
+                    </div>
+
+                    <div class="dashboard-icon balance-icon">
+                        <i class="bi bi-calendar3"></i>
+                    </div>
+
+                </div>
+
+                <small class="text-muted">
+                    Ukupan broj planova
+                </small>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row g-4">
+
+    <div class="col-lg-6">
+
+        <div class="card h-100">
+
+            <div class="card-header">
+                <i class="bi bi-people me-2"></i>
+                Upravljanje korisnicima
+            </div>
+
+            <div class="card-body">
+
+                <p class="text-muted">
+                    Pregledaj registrovane korisnike aplikacije i njihove osnovne podatke.
+                </p>
+
+                <a asp-controller="Admin"
+                   asp-action="Korisnici"
+                   class="btn btn-primary">
+
+                    <i class="bi bi-people me-1"></i>
+                    Pregled korisnika
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-6">
+
+        <div class="card h-100">
+
+            <div class="card-header">
+                <i class="bi bi-shield-check me-2"></i>
+                Status sistema
+            </div>
+
+            <div class="card-body">
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <div class="dashboard-icon income-icon">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+
+                    <div>
+                        <strong>Aplikacija je aktivna</strong>
+
+                        <div class="text-muted">
+                            Administratorski pristup je omogućen.
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

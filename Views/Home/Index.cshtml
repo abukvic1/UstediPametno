@@ -1,0 +1,286 @@
+﻿@using UstediPametno.ViewModels
+@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "Početna";
+}
+
+@if (!(User.Identity?.IsAuthenticated ?? false))
+{
+    <div class="home-guest text-center py-5">
+        <h1 class="display-5 fw-bold">
+            UštediPametno
+        </h1>
+
+        <p class="lead text-muted mb-4">
+            Jednostavno prati prihode, troškove, štednju i svoje finansijske ciljeve.
+        </p>
+
+        <div class="d-flex justify-content-center gap-2">
+            <a asp-area="Identity"
+               asp-page="/Account/Login"
+               class="btn btn-primary btn-lg">
+                Prijava
+            </a>
+
+            <a asp-area="Identity"
+               asp-page="/Account/Register"
+               class="btn btn-outline-primary btn-lg">
+                Registracija
+            </a>
+        </div>
+    </div>
+}
+else
+{
+    string nazivMjeseca =
+        new DateTime(
+            Model.Godina,
+            Model.Mjesec,
+            1)
+        .ToString(
+            "MMMM",
+            new System.Globalization.CultureInfo("bs-BA"));
+
+    <div class="dashboard-header mb-4">
+        <div>
+            <h1>Moje finansije</h1>
+            <p class="text-muted mb-0">
+                Pregled trenutnog stanja za @nazivMjeseca @Model.Godina.
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-6 col-xl-3">
+            <div class="dashboard-stat-card">
+                <div class="dashboard-stat-top">
+                    <div>
+                        <span class="dashboard-stat-label">
+                            Trenutno stanje
+                        </span>
+
+                        <h2>
+                            @Model.TrenutnoStanje.ToString("N2") KM
+                        </h2>
+                    </div>
+
+                    <div class="dashboard-stat-icon">
+                        <i class="bi bi-wallet2"></i>
+                    </div>
+                </div>
+
+                <small>
+                    Ukupan novac nakon svih evidentiranih troškova
+                </small>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="dashboard-stat-card">
+                <div class="dashboard-stat-top">
+                    <div>
+                        <span class="dashboard-stat-label">
+                            Raspoloživo
+                        </span>
+
+                        <h2>
+                            @Model.Raspolozivo.ToString("N2") KM
+                        </h2>
+                    </div>
+
+                    <div class="dashboard-stat-icon">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                </div>
+
+                <small>
+                    Novac koji trenutno možeš slobodno trošiti
+                </small>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="dashboard-stat-card">
+                <div class="dashboard-stat-top">
+                    <div>
+                        <span class="dashboard-stat-label">
+                            Ušteđeno ukupno
+                        </span>
+
+                        <h2>
+                            @Model.UkupnoUstedjeno.ToString("N2") KM
+                        </h2>
+                    </div>
+
+                    <div class="dashboard-stat-icon">
+                        <i class="bi bi-piggy-bank"></i>
+                    </div>
+                </div>
+
+                <small>
+                    Ukupan novac odvojen za ciljeve
+                </small>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="dashboard-stat-card">
+                <div class="dashboard-stat-top">
+                    <div>
+                        <span class="dashboard-stat-label">
+                            Dnevni budžet
+                        </span>
+
+                        <h2>
+                            @Model.DnevniBudzet.ToString("N2") KM
+                        </h2>
+                    </div>
+
+                    <div class="dashboard-stat-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                </div>
+
+                <small>
+                    Preporučeni iznos za trošenje po danu
+                </small>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-4">
+            <div class="dashboard-mini-card">
+                <span>Primljeno ovaj mjesec</span>
+
+                <strong class="amount-income">
+                    +@Model.PrimljenoOvajMjesec.ToString("N2") KM
+                </strong>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="dashboard-mini-card">
+                <span>Potrošeno ovaj mjesec</span>
+
+                <strong class="amount-expense">
+                    -@Model.PotrosenoOvajMjesec.ToString("N2") KM
+                </strong>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="dashboard-mini-card">
+                <span>Ušteđeno ovaj mjesec</span>
+
+                <strong class="amount-saving">
+                    @Model.UstedjenoOvajMjesec.ToString("N2") KM
+                </strong>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="dashboard-section">
+
+        <div class="dashboard-section-header">
+            <div>
+                <h3>Ciljevi štednje</h3>
+
+                <p class="text-muted">
+                    Prati koliko si napredovala prema svakom cilju.
+                </p>
+            </div>
+
+            <a asp-controller="CiljStednje"
+               asp-action="Index"
+               class="btn btn-outline-primary">
+                Svi ciljevi
+            </a>
+        </div>
+
+        @if (Model.Ciljevi.Any())
+        {
+            <div class="row g-4">
+
+                @foreach (var cilj in Model.Ciljevi)
+                {
+                    <div class="col-md-6 col-xl-4">
+
+                        <div class="dashboard-goal-card">
+
+                            <div class="dashboard-goal-header">
+                                <div class="dashboard-goal-icon">
+                                    <i class="bi bi-bullseye"></i>
+                                </div>
+
+                                <div>
+                                    <h5>
+                                        @cilj.Naziv
+                                    </h5>
+
+                                    <small>
+                                        Rok:
+                                        @cilj.DatumZavrsetka.ToString("dd.MM.yyyy.")
+                                    </small>
+                                </div>
+
+                                <span class="dashboard-goal-percent">
+                                    @cilj.NapredakPostotak.ToString("N0")%
+                                </span>
+                            </div>
+
+                            <div class="progress dashboard-goal-progress">
+                                <div class="progress-bar"
+                                     role="progressbar"
+                                     style="width: @cilj.NapredakPostotak%">
+                                </div>
+                            </div>
+
+                            <div class="dashboard-goal-values">
+
+                                <div>
+                                    <span>Ušteđeno</span>
+
+                                    <strong>
+                                        @cilj.TrenutnoUstedjeno.ToString("N2") KM
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    <span>Cilj</span>
+
+                                    <strong>
+                                        @cilj.CiljaniIznos.ToString("N2") KM
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                            <div class="dashboard-goal-footer">
+                                Preostalo:
+                                <strong>
+                                    @cilj.Preostalo.ToString("N2") KM
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                Još nemaš kreiranih ciljeva štednje.
+            </div>
+        }
+
+    </div>
+}

@@ -1,0 +1,61 @@
+﻿@using UstediPametno.Models
+@model MjesecniPlan
+
+@{
+    ViewData["Title"] = "Obriši mjesečni plan";
+}
+
+<h1>Obriši mjesečni plan</h1>
+
+<div class="alert alert-warning">
+    Jesi li sigurna da želiš obrisati ovaj mjesečni plan?
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">
+        Period
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.Mjesec / @Model.Godina
+    </dd>
+
+    <dt class="col-sm-3">
+        Ukupan prihod
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.UkupanPrihod.ToString("N2") KM
+    </dd>
+
+    <dt class="col-sm-3">
+        Fiksni troškovi
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.UkupniFiksniTroskovi.ToString("N2") KM
+    </dd>
+
+    <dt class="col-sm-3">
+        Planirana štednja
+    </dt>
+
+    <dd class="col-sm-9">
+        @Model.PotrebnaStednja.ToString("N2") KM
+    </dd>
+</dl>
+
+<form asp-action="Delete"
+      asp-route-id="@Model.Id"
+      method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <button type="submit" class="btn btn-danger">
+        Obriši
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Odustani
+    </a>
+</form>

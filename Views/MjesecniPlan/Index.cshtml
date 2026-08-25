@@ -1,0 +1,213 @@
+﻿@model IEnumerable<UstediPametno.ViewModels.MjesecniPlanPrikazViewModel>
+
+@{
+    ViewData["Title"] = "Mjesečni planovi";
+}
+
+<div class="page-title">
+    <h1>Mjesečni planovi</h1>
+    <p>
+        Prati stvarne prihode, potrošnju, štednju i raspoloživi budžet.
+    </p>
+</div>
+
+<p>
+    <a asp-action="Create"
+       class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>
+        Kreiraj novi plan
+    </a>
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Još uvijek nemaš kreiranih mjesečnih planova.
+    </div>
+}
+else
+{
+    <div class="table-container">
+        <div class="table-responsive">
+
+            <table class="table align-middle">
+
+                <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Preneseno</th>
+                        <th>Ciljevi ovog mjeseca</th>
+                        <th>Primljeno</th>
+                       
+                        <th>Planirano za cilj</th>
+                        <th>Potrošeno</th>
+                        <th>Ušteđeno</th>
+                        <th>Raspoloživo</th>
+                        <th>Dnevni budžet</th>
+                        <th>Akcije</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var plan in Model)
+                    {
+                        string nazivMjeseca =
+                            new DateTime(
+                                plan.Godina,
+                                plan.Mjesec,
+                                1)
+                            .ToString(
+                                "MMMM",
+                                new System.Globalization.CultureInfo("bs-BA"));
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    @nazivMjeseca @plan.Godina.
+                                </strong>
+                            </td>
+                            <td>
+                                @if (plan.PrenesenoIzPrethodnogMjeseca > 0)
+                                {
+                                    <span class="amount-income">
+                                        +@plan.PrenesenoIzPrethodnogMjeseca.ToString("N2") KM
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        0,00 KM
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                @if (plan.Ciljevi.Any())
+                                {
+                                    <div class="d-flex flex-column gap-3">
+
+                                        @foreach (var cilj in plan.Ciljevi)
+                                        {
+                                            <div class="goal-plan-card">
+
+                                                <div class="d-flex justify-content-between mb-1">
+                                                    <strong>@cilj.Naziv</strong>
+
+                                                    <span>
+                                                        @cilj.NapredakPostotak.ToString("N0")%
+                                                    </span>
+                                                </div>
+
+                                                <div class="progress mb-2"
+                                                     style="height: 7px;">
+
+                                                    <div class="progress-bar"
+                                                         role="progressbar"
+                                                         style="width: @cilj.NapredakPostotak%">
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="small text-muted">
+
+                                                    Planirano:
+                                                    <strong>
+                                                        @cilj.PlaniraniIznos.ToString("N2") KM
+                                                    </strong>
+
+                                                    <br />
+
+                                                    Uplaćeno:
+                                                    <strong>
+                                                        @cilj.Uplaceno.ToString("N2") KM
+                                                    </strong>
+
+                                                    <br />
+
+                                                    Preostalo:
+                                                    <strong>
+                                                        @cilj.Preostalo.ToString("N2") KM
+                                                    </strong>
+
+                                                </div>
+
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">
+                                        Bez ciljeva
+                                    </span>
+                                }
+                            </td>
+                            <td class="amount-income">
+                                @plan.UkupanPrihod.ToString("N2") KM
+                            </td>
+
+                          
+
+                            <td class="amount-saving">
+                                @plan.PotrebnaStednja.ToString("N2") KM
+                            </td>
+
+                            <td class="amount-expense">
+                                @plan.StvarnoPotroseno.ToString("N2") KM
+                            </td>
+
+                            <td class="amount-saving">
+                                @plan.StvarnoUstedjeno.ToString("N2") KM
+                            </td>
+
+                            <td>
+                                <strong>
+                                    @plan.RaspolozivoZaTrosenje.ToString("N2") KM
+                                </strong>
+                            </td>
+
+                            <td>
+                                <strong>
+                                    @plan.DnevniBudzet.ToString("N2") KM
+                                </strong>
+                            </td>
+
+                            <td class="text-nowrap">
+
+                                <form asp-action="PonovoIzracunaj"
+                                      asp-route-id="@plan.Id"
+                                      method="post"
+                                      class="d-inline">
+
+                                    <button type="submit"
+                                            class="btn btn-outline-primary btn-sm"
+                                            title="Ponovo izračunaj">
+
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                    </button>
+
+                                </form>
+
+                                <a asp-action="Delete"
+                                   asp-route-id="@plan.Id"
+                                   class="btn btn-danger btn-sm"
+                                   title="Obriši plan">
+
+                                    <i class="bi bi-trash"></i>
+                                </a>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+}

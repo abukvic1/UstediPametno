@@ -1,0 +1,143 @@
+﻿@using UstediPametno.Models
+@using UstediPametno.ViewModels
+@model TransakcijaFormaViewModel
+
+@{
+    ViewData["Title"] = "Izmijeni transakciju";
+}
+
+<h1>Izmijeni transakciju</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Edit"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            <div asp-validation-summary="All"
+                 class="text-danger">
+            </div>
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Vrsta" class="form-label">
+                    Vrsta transakcije
+                </label>
+
+                <select asp-for="Vrsta"
+                        asp-items="Html.GetEnumSelectList<VrstaTransakcije>()"
+                        class="form-select"
+                        id="vrstaTransakcije">
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Iznos" class="form-label">
+                    Iznos
+                </label>
+
+                <input asp-for="Iznos"
+                       class="form-control" />
+
+                <span asp-validation-for="Iznos"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Opis" class="form-label">
+                    Opis
+                </label>
+
+                <input asp-for="Opis"
+                       class="form-control" />
+
+                <span asp-validation-for="Opis"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Datum" class="form-label">
+                    Datum
+                </label>
+
+                <input asp-for="Datum"
+                       type="date"
+                       class="form-control" />
+
+                <span asp-validation-for="Datum"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3"
+                 id="ciljStednjePolje">
+
+                <label asp-for="CiljStednjeId"
+                       class="form-label">
+                    Cilj štednje
+                </label>
+
+                <select asp-for="CiljStednjeId"
+                        asp-items="Model.Ciljevi"
+                        class="form-select"
+                        id="ciljStednje">
+
+                    <option value="">
+                        Bez cilja štednje
+                    </option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Sačuvaj
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Nazad
+            </a>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const vrstaPolje =
+            document.getElementById("vrstaTransakcije");
+
+        const ciljPolje =
+            document.getElementById("ciljStednjePolje");
+
+        const ciljLista =
+            document.getElementById("ciljStednje");
+
+        const uplataStednjeVrijednost =
+            "@((int)VrstaTransakcije.UplataStednje)";
+
+        function prikaziIliSakrijCilj() {
+            const jesteUplataStednje =
+                vrstaPolje.value === uplataStednjeVrijednost;
+
+            ciljPolje.style.display =
+                jesteUplataStednje ? "block" : "none";
+
+            if (!jesteUplataStednje) {
+                ciljLista.value = "";
+            }
+        }
+
+        vrstaPolje.addEventListener(
+            "change",
+            prikaziIliSakrijCilj);
+
+        prikaziIliSakrijCilj();
+    </script>
+}

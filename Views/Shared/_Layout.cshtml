@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - UštediPametno</title>
+
+    <script type="importmap"></script>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/UstediPametno.styles.css" asp-append-version="true" />
+</head>
+
+<body>
+
+    <div class="app-wrapper">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+
+            <!-- LOGO -->
+            <div class="sidebar-logo">
+
+                <div class="logo-icon">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+
+                <div>
+                    <span class="logo-title">Uštedi</span>
+                    <span class="logo-highlight">Pametno</span>
+                </div>
+
+            </div>
+
+
+            <!-- NAVIGACIJA -->
+            <nav class="sidebar-nav">
+
+                <!-- POČETNA - SVI JE VIDE -->
+                <a class="sidebar-link"
+                   asp-controller="Home"
+                   asp-action="Index">
+
+                    <i class="bi bi-house-door"></i>
+                    <span>Početna</span>
+
+                </a>
+
+
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <!-- ===================== -->
+                        <!-- ADMIN -->
+                        <!-- ===================== -->
+
+                        <div class="sidebar-section-title">
+                            ADMINISTRACIJA
+                        </div>
+
+                        <a class="sidebar-link"
+                           asp-controller="Admin"
+                           asp-action="Index">
+
+                            <i class="bi bi-speedometer2"></i>
+                            <span>Admin panel</span>
+
+                        </a>
+
+                        <a class="sidebar-link"
+                           asp-controller="Admin"
+                           asp-action="Korisnici">
+
+                            <i class="bi bi-people"></i>
+                            <span>Korisnici</span>
+
+                        </a>
+                    }
+                    else
+                    {
+                        <!-- ===================== -->
+                        <!-- OBIČNI KORISNIK -->
+                        <!-- ===================== -->
+
+                        <div class="sidebar-section-title">
+                            MOJE FINANSIJE
+                        </div>
+
+                        <a class="sidebar-link"
+                           asp-controller="Transakcija"
+                           asp-action="Index">
+
+                            <i class="bi bi-arrow-left-right"></i>
+                            <span>Transakcije</span>
+
+                        </a>
+
+
+                        <a class="sidebar-link"
+                           asp-controller="MjesecniPlan"
+                           asp-action="Index">
+
+                            <i class="bi bi-calendar3"></i>
+                            <span>Mjesečni plan</span>
+
+                        </a>
+
+
+                        <a class="sidebar-link"
+                           asp-controller="CiljStednje"
+                           asp-action="Index">
+
+                            <i class="bi bi-bullseye"></i>
+                            <span>Ciljevi štednje</span>
+
+                        </a>
+                    }
+                }
+                else
+                {
+                    <!-- ===================== -->
+                    <!-- GOST -->
+                    <!-- ===================== -->
+
+                    <div class="sidebar-section-title">
+                        KORISNIČKI RAČUN
+                    </div>
+
+                    <a class="sidebar-link"
+                       asp-area="Identity"
+                       asp-page="/Account/Login">
+
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        <span>Prijavi se</span>
+
+                    </a>
+
+
+                    <a class="sidebar-link"
+                       asp-area="Identity"
+                       asp-page="/Account/Register">
+
+                        <i class="bi bi-person-plus"></i>
+                        <span>Registruj se</span>
+
+                    </a>
+                }
+
+            </nav>
+
+
+            <!-- DONJI DIO SIDEBARA -->
+            <div class="sidebar-bottom">
+
+                <a class="sidebar-link"
+                   asp-controller="Home"
+                   asp-action="Privacy">
+
+                    <i class="bi bi-shield-check"></i>
+                    <span>Privatnost</span>
+
+                </a>
+
+            </div>
+
+        </aside>
+
+
+        <!-- GLAVNI DIO -->
+        <div class="main-content">
+
+            <!-- TOPBAR -->
+            <header class="topbar">
+
+                <button class="sidebar-toggle"
+                        type="button"
+                        id="sidebarToggle">
+
+                    <i class="bi bi-list"></i>
+
+                </button>
+
+
+                <div class="topbar-title">
+                    @ViewData["Title"]
+                </div>
+
+
+                <!-- LOGIN / LOGOUT -->
+                <div class="topbar-user">
+                    <partial name="_LoginPartial" />
+                </div>
+
+            </header>
+
+
+            <!-- SADRŽAJ STRANICE -->
+            <main class="page-content">
+
+                @RenderBody()
+
+            </main>
+
+
+            <!-- FOOTER -->
+            <footer class="app-footer">
+
+                <span>
+                    &copy; 2026 UštediPametno
+                </span>
+
+                <span>
+                    Pametnije upravljaj svojim novcem.
+                </span>
+
+            </footer>
+
+        </div>
+
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+    <script>
+            const toggle = document.getElementById("sidebarToggle");
+
+            if (toggle) {
+                toggle.addEventListener("click", function() {
+
+                    document
+                        .querySelector(".sidebar")
+                        .classList.toggle("sidebar-open");
+
+                });
+            }
+    </script>
+
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

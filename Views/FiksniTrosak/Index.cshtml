@@ -1,0 +1,73 @@
+﻿@using UstediPametno.Models
+@model IEnumerable<FiksniTrosak>
+
+@{
+    ViewData["Title"] = "Fiksni troškovi";
+}
+
+<h1>Fiksni troškovi</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">
+        Dodaj novi fiksni trošak
+    </a>
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Još uvijek nemaš unesene fiksne troškove.
+    </div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Kategorija</th>
+                <th>Mjesečni iznos</th>
+                <th>Status</th>
+                <th>Akcije</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (FiksniTrosak trosak in Model)
+            {
+                <tr>
+                    <td>@trosak.Naziv</td>
+                    <td>@trosak.Kategorija</td>
+                    <td>@trosak.MjesecniIznos.ToString("N2") KM</td>
+                    <td>
+                        @if (trosak.JeAktivan)
+                        {
+                            <span class="badge bg-success">
+                                Aktivan
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">
+                                Neaktivan
+                            </span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit"
+                           asp-route-id="@trosak.Id"
+                           class="btn btn-warning btn-sm">
+                            Izmijeni
+                        </a>
+                        <a asp-action="Delete"
+                           asp-route-id="@trosak.Id"
+                           class="btn btn-danger btn-sm">
+                            Obriši
+                        </a>
+                    </td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,64 @@
+﻿@model UstediPametno.Models.IzvorPrihoda
+
+@{
+    ViewData["Title"] = "Izmijeni izvor prihoda";
+}
+
+<h1>Izmijeni izvor prihoda</h1>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Edit"
+              asp-route-id="@Model.Id"
+              method="post">
+
+            <div asp-validation-summary="All"
+                 class="text-danger">
+            </div>
+
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Naziv" class="form-label">
+                    Naziv izvora prihoda
+                </label>
+
+                <input asp-for="Naziv"
+                       class="form-control" />
+
+                <span asp-validation-for="Naziv"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MjesecniIznos" class="form-label">
+                    Mjesečni iznos
+                </label>
+
+                <input asp-for="MjesecniIznos"
+                       class="form-control" />
+
+                <span asp-validation-for="MjesecniIznos"
+                      class="text-danger">
+                </span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Sačuvaj
+            </button>
+
+            <a asp-action="Index" class="btn btn-secondary">
+                Nazad
+            </a>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

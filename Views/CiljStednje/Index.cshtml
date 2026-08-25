@@ -1,0 +1,119 @@
+﻿@using UstediPametno.Models
+@using UstediPametno.ViewModels
+@model IEnumerable<CiljStednjePrikazViewModel>
+
+@{
+    ViewData["Title"] = "Ciljevi štednje";
+}
+
+<h1>Ciljevi štednje</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">
+        Dodaj novi cilj
+    </a>
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Još uvijek nemaš ciljeva štednje.
+    </div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Ciljani iznos</th>
+                <th>Ušteđeno</th>
+                <th>Napredak</th>
+                <th>Rok</th>
+                <th>Status</th>
+                <th>Akcije</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (CiljStednjePrikazViewModel stavka in Model)
+            {
+                CiljStednje cilj = stavka.Cilj;
+                int postotak = (int)Math.Round(stavka.Postotak);
+
+                string statusKlasa = cilj.Status switch
+                {
+                    StatusCilja.Ostvaren => "bg-success",
+                    StatusCilja.Neuspjesan => "bg-danger",
+                    StatusCilja.Prilagodjen => "bg-info text-dark",
+                    _ => "bg-primary"
+                };
+
+                string statusTekst = cilj.Status switch
+                {
+                    StatusCilja.UToku => "U toku",
+                    StatusCilja.Ostvaren => "Ostvaren",
+                    StatusCilja.Neuspjesan => "Neuspješan",
+                    StatusCilja.Prilagodjen => "Prilagođen",
+                    _ => cilj.Status.ToString()
+                };
+
+                <tr>
+                    <td>@cilj.Naziv</td>
+
+                    <td>
+                        @cilj.CiljaniIznos.ToString("N2") KM
+                    </td>
+
+                    <td>
+                        @cilj.TrenutnoUstedjeno.ToString("N2") KM
+                    </td>
+
+                    <td style="min-width: 160px">
+                        <div class="progress">
+                            <div class="progress-bar"
+                                 style="width: @(postotak)%;"
+                                 aria-valuenow="@postotak"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+                                @postotak%
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        @cilj.DatumZavrsetka.ToString("dd.MM.yyyy.")
+                    </td>
+
+                    <td>
+                        <span class="badge @statusKlasa">
+                            @statusTekst
+                        </span>
+                    </td>
+                    <td>
+                        <a asp-action="Edit"
+                           asp-route-id="@cilj.Id"
+                           class="btn btn-warning btn-sm">
+                            Izmijeni
+                        </a>
+                        @if (cilj.Status == StatusCilja.UToku ||
+                             cilj.Status == StatusCilja.Prilagodjen)
+                        {
+                            <a asp-action="Uplata"
+                               asp-route-id="@cilj.Id"
+                               class="btn btn-success btn-sm">
+                                Uplati
+                            </a>
+                        }
+                        <a asp-action="Delete"
+                           asp-route-id="@cilj.Id"
+                           class="btn btn-danger btn-sm">
+                            Obriši
+                        </a>
+                      
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

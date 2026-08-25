@@ -1,0 +1,54 @@
+﻿@model IEnumerable<UstediPametno.Models.IzvorPrihoda>
+
+@{
+    ViewData["Title"] = "Izvori prihoda";
+}
+
+<h1>Izvori prihoda</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">
+        Dodaj novi izvor prihoda
+    </a>
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        Još uvijek nemaš unesene izvore prihoda.
+    </div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Mjesečni iznos</th>
+                <th>Akcije</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var prihod in Model)
+            {
+                <tr>
+                    <td>@prihod.Naziv</td>
+                    <td>@prihod.MjesecniIznos.ToString("N2") KM</td>
+                    <td>
+                        <a asp-action="Edit"
+                           asp-route-id="@prihod.Id"
+                           class="btn btn-warning btn-sm">
+                            Izmijeni
+                        </a>
+                        <a asp-action="Delete"
+                           asp-route-id="@prihod.Id"
+                           class="btn btn-danger btn-sm">
+                            Obriši
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
