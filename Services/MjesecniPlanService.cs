@@ -286,13 +286,11 @@ namespace UstediPametno.Services
     Math.Max(
         0,
         potrebnaStednja - ustedjeno);
-
             decimal raspolozivo =
-      plan.PrenesenoIzPrethodnogMjeseca
-      + prihod
-      - potroseno
-      - ustedjeno
-      - preostaloZaCiljeve;
+                plan.PrenesenoIzPrethodnogMjeseca
+                + prihod
+                - potroseno
+                - ustedjeno;
 
             raspolozivo =
                 Math.Max(

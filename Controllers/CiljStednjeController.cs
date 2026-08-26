@@ -90,97 +90,7 @@ namespace UstediPametno.Controllers
                 return View(ciljStednje);
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> Uplata(int id)
-        {
-            string? korisnikId = _userManager.GetUserId(User);
-
-            if (korisnikId == null)
-            {
-                return Challenge();
-            }
-
-            CiljStednje? cilj =
-                await _service.GetByIdAsync(id, korisnikId);
-
-            if (cilj == null)
-            {
-                return NotFound();
-            }
-
-            UplataNaCiljViewModel model =
-                new UplataNaCiljViewModel
-                {
-                    Id = cilj.Id,
-                    Naziv = cilj.Naziv,
-                    CiljaniIznos = cilj.CiljaniIznos,
-                    TrenutnoUstedjeno = cilj.TrenutnoUstedjeno
-                };
-
-            return View(model);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Uplata(
-    [Bind("Id,Iznos")]
-    UplataNaCiljViewModel model)
-        {
-            string? korisnikId = _userManager.GetUserId(User);
-
-            if (korisnikId == null)
-            {
-                return Challenge();
-            }
-
-            CiljStednje? cilj =
-                await _service.GetByIdAsync(model.Id, korisnikId);
-
-            if (cilj == null)
-            {
-                return NotFound();
-            }
-
-            model.Naziv = cilj.Naziv;
-            model.CiljaniIznos = cilj.CiljaniIznos;
-            model.TrenutnoUstedjeno = cilj.TrenutnoUstedjeno;
-
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            try
-            {
-                bool uspjesno =
-                    await _service.DodajUplatuAsync(
-                        model.Id,
-                        model.Iznos,
-                        korisnikId);
-
-                if (!uspjesno)
-                {
-                    return NotFound();
-                }
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch (ArgumentException exception)
-            {
-                ModelState.AddModelError(
-                    string.Empty,
-                    exception.Message);
-
-                return View(model);
-            }
-            catch (InvalidOperationException exception)
-            {
-                ModelState.AddModelError(
-                    string.Empty,
-                    exception.Message);
-
-                return View(model);
-            }
-        }
+       
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -280,15 +190,24 @@ namespace UstediPametno.Controllers
                 return Challenge();
             }
 
-            bool uspjesno =
-                await _service.DeleteAsync(id, korisnikId);
-
-            if (!uspjesno)
+            try
             {
-                return NotFound();
-            }
+                bool uspjesno =
+                    await _service.DeleteAsync(id, korisnikId);
 
-            return RedirectToAction(nameof(Index));
+                if (!uspjesno)
+                {
+                    return NotFound();
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException exception)
+            {
+                TempData["Error"] = exception.Message;
+
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

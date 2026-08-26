@@ -44,74 +44,90 @@ namespace UstediPametno.Controllers
             IEnumerable<MjesecniPlan> planovi =
                 await _planService.GetAllAsync(korisnikId);
 
+            foreach (MjesecniPlan plan in planovi)
+            {
+                await _planService.PonovoIzracunajAsync(
+                    plan.Id,
+                    korisnikId);
+            }
+
+            planovi =
+                await _planService.GetAllAsync(korisnikId);
+
             IEnumerable<CiljStednje> sviCiljevi =
                 await _ciljService.GetAllAsync(korisnikId);
 
             List<MjesecniPlanPrikazViewModel> model = new();
 
             foreach (MjesecniPlan plan in planovi)
-
             {
                 IEnumerable<Transakcija> transakcijePlana =
-    await _transakcijaService.GetByPlanAsync(
-        plan.Id,
-        korisnikId);
+                    await _transakcijaService.GetByPlanAsync(
+                        plan.Id,
+                        korisnikId);
+
                 IEnumerable<MjesecniPlanCilj> veze =
                     await _planCiljService.GetByPlanAsync(
                         plan.Id);
 
                 List<MjesecniPlanCiljPrikazViewModel> ciljeviPlana =
-     veze
-         .Select(veza =>
-         {
-             CiljStednje? cilj =
-                 sviCiljevi.FirstOrDefault(
-                     c => c.Id == veza.CiljStednjeId);
+                    veze
+                        .Select(veza =>
+                        {
+                            CiljStednje? cilj =
+                                sviCiljevi.FirstOrDefault(
+                                    c => c.Id == veza.CiljStednjeId);
 
-             if (cilj == null)
-             {
-                 return null;
-             }
+                            if (cilj == null)
+                            {
+                                return null;
+                            }
 
-             decimal uplaceno =
-                 transakcijePlana
-                     .Where(t =>
-                         t.Vrsta == VrstaTransakcije.UplataStednje &&
-                         t.CiljStednjeId == cilj.Id)
-                     .Sum(t => t.Iznos);
+                            decimal uplaceno =
+                                transakcijePlana
+                                    .Where(t =>
+                                        t.Vrsta ==
+                                            VrstaTransakcije.UplataStednje &&
+                                        t.CiljStednjeId == cilj.Id)
+                                    .Sum(t => t.Iznos);
 
-             decimal preostalo =
-                 Math.Max(
-                     0,
-                     veza.PlaniraniIznos - uplaceno);
+                            decimal preostalo =
+                                Math.Max(
+                                    0,
+                                    veza.PlaniraniIznos -
+                                    uplaceno);
 
-             decimal napredak =
-                 veza.PlaniraniIznos > 0
-                     ? Math.Min(
-                         100,
-                         uplaceno / veza.PlaniraniIznos * 100)
-                     : 0;
+                            decimal napredak =
+                                veza.PlaniraniIznos > 0
+                                    ? Math.Min(
+                                        100,
+                                        uplaceno /
+                                        veza.PlaniraniIznos *
+                                        100)
+                                    : 0;
 
-             return new MjesecniPlanCiljPrikazViewModel
-             {
-                 Naziv = cilj.Naziv,
+                            return new MjesecniPlanCiljPrikazViewModel
+                            {
+                                Naziv = cilj.Naziv,
 
-                 PlaniraniIznos =
-                     veza.PlaniraniIznos,
+                                PlaniraniIznos =
+                                    veza.PlaniraniIznos,
 
-                 Uplaceno =
-                     uplaceno,
+                                Uplaceno =
+                                    uplaceno,
 
-                 Preostalo =
-                     preostalo,
+                                Preostalo =
+                                    preostalo,
 
-                 NapredakPostotak =
-                     Math.Round(napredak, 2)
-             };
-         })
-         .Where(cilj => cilj != null)
-         .Select(cilj => cilj!)
-         .ToList();
+                                NapredakPostotak =
+                                    Math.Round(
+                                        napredak,
+                                        2)
+                            };
+                        })
+                        .Where(cilj => cilj != null)
+                        .Select(cilj => cilj!)
+                        .ToList();
 
                 MjesecniPlanPrikazViewModel prikaz =
                     new MjesecniPlanPrikazViewModel
@@ -128,7 +144,7 @@ namespace UstediPametno.Controllers
                             plan.UkupanPrihod,
 
                         PrenesenoIzPrethodnogMjeseca =
-    plan.PrenesenoIzPrethodnogMjeseca,
+                            plan.PrenesenoIzPrethodnogMjeseca,
 
                         UkupniFiksniTroskovi =
                             plan.UkupniFiksniTroskovi,

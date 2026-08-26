@@ -44,6 +44,36 @@ namespace UstediPametno.Controllers
             DateTime danas =
                 DateTime.Today;
 
+            // ===========================
+            // PRONAĐI TRENUTNI PLAN
+            // ===========================
+
+            MjesecniPlan? trenutniPlan =
+                await _planService.GetByPeriodAsync(
+                    danas.Year,
+                    danas.Month,
+                    korisnikId);
+
+            // Ako plan postoji, prvo ga ponovo izračunaj
+            // da uzme najnovije transakcije.
+            if (trenutniPlan != null)
+            {
+                await _planService.PonovoIzracunajAsync(
+                    trenutniPlan.Id,
+                    korisnikId);
+
+                // Ponovo učitaj plan iz baze sa novim vrijednostima
+                trenutniPlan =
+                    await _planService.GetByPeriodAsync(
+                        danas.Year,
+                        danas.Month,
+                        korisnikId);
+            }
+
+            // ===========================
+            // TRANSAKCIJE
+            // ===========================
+
             IEnumerable<Transakcija> sveTransakcije =
                 await _transakcijaService.GetAllAsync(
                     korisnikId);
@@ -87,6 +117,10 @@ namespace UstediPametno.Controllers
                         t.Vrsta == VrstaTransakcije.UplataStednje)
                     .Sum(t => t.Iznos);
 
+            // ===========================
+            // CILJEVI
+            // ===========================
+
             IEnumerable<CiljStednje> sviCiljevi =
                 await _ciljService.GetAllAsync(
                     korisnikId);
@@ -97,13 +131,12 @@ namespace UstediPametno.Controllers
 
             decimal trenutnoStanje =
                 ukupniPrihodi -
-                ukupniRashodi;
+                ukupniRashodi -
+                ukupnoUstedjeno;
 
-            MjesecniPlan? trenutniPlan =
-                await _planService.GetByPeriodAsync(
-                    danas.Year,
-                    danas.Month,
-                    korisnikId);
+            // ===========================
+            // RASPOLOŽIVO
+            // ===========================
 
             decimal raspolozivo;
 
@@ -117,9 +150,12 @@ namespace UstediPametno.Controllers
                 raspolozivo =
                     Math.Max(
                         0,
-                        trenutnoStanje -
-                        ukupnoUstedjeno);
+                        trenutnoStanje);
             }
+
+            // ===========================
+            // DASHBOARD CILJEVI
+            // ===========================
 
             List<DashboardCiljViewModel> ciljevi =
                 sviCiljevi
@@ -171,6 +207,10 @@ namespace UstediPametno.Controllers
                         cilj => cilj.NapredakPostotak)
                     .ToList();
 
+            // ===========================
+            // VIEW MODEL
+            // ===========================
+
             DashboardViewModel model =
                 new DashboardViewModel
                 {
@@ -219,7 +259,6 @@ namespace UstediPametno.Controllers
 
             return View(model);
         }
-
         public IActionResult Privacy()
         {
             return View();

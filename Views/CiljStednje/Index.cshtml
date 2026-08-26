@@ -14,6 +14,13 @@
     </a>
 </p>
 
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
 @if (!Model.Any())
 {
     <div class="alert alert-info">
@@ -90,27 +97,20 @@ else
                             @statusTekst
                         </span>
                     </td>
+
                     <td>
                         <a asp-action="Edit"
                            asp-route-id="@cilj.Id"
                            class="btn btn-warning btn-sm">
                             Izmijeni
                         </a>
-                        @if (cilj.Status == StatusCilja.UToku ||
-                             cilj.Status == StatusCilja.Prilagodjen)
-                        {
-                            <a asp-action="Uplata"
-                               asp-route-id="@cilj.Id"
-                               class="btn btn-success btn-sm">
-                                Uplati
-                            </a>
-                        }
+
+
                         <a asp-action="Delete"
                            asp-route-id="@cilj.Id"
                            class="btn btn-danger btn-sm">
                             Obriši
                         </a>
-                      
                     </td>
                 </tr>
             }

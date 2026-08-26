@@ -68,6 +68,19 @@ namespace UstediPametno.Services
     transakcija,
     korisnikId);
             ValidirajOsnovnePodatke(transakcija);
+            if (transakcija.Vrsta == VrstaTransakcije.FiksniTrosak ||
+    transakcija.Vrsta == VrstaTransakcije.DnevnaPotrosnja)
+            {
+                decimal raspolozivo =
+                    await IzracunajRaspolozivoAsync(korisnikId);
+
+                if (transakcija.Iznos > raspolozivo)
+                {
+                    throw new InvalidOperationException(
+                        $"Nemate dovoljno raspoloživih sredstava. " +
+                        $"Trenutno imate {raspolozivo:N2} KM.");
+                }
+            }
 
             await ValidirajVezeAsync(
                 transakcija,
@@ -442,6 +455,34 @@ namespace UstediPametno.Services
                 .Where(t =>
                     t.Vrsta == VrstaTransakcije.UplataStednje)
                 .Sum(t => t.Iznos);
+        }
+        private async Task<decimal> IzracunajRaspolozivoAsync(
+    string korisnikId)
+        {
+            IEnumerable<Transakcija> transakcije =
+                await GetAllAsync(korisnikId);
+
+            decimal prihodi =
+                transakcije
+                    .Where(t => t.Vrsta == VrstaTransakcije.Prihod)
+                    .Sum(t => t.Iznos);
+
+            decimal rashodi =
+                transakcije
+                    .Where(t =>
+                        t.Vrsta == VrstaTransakcije.FiksniTrosak ||
+                        t.Vrsta == VrstaTransakcije.DnevnaPotrosnja)
+                    .Sum(t => t.Iznos);
+
+            decimal stednja =
+                transakcije
+                    .Where(t =>
+                        t.Vrsta == VrstaTransakcije.UplataStednje)
+                    .Sum(t => t.Iznos);
+
+            return Math.Max(
+                0,
+                prihodi - rashodi - stednja);
         }
     }
 
