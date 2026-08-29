@@ -1,5 +1,6 @@
 ﻿using UstediPametno.Models;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
 namespace UstediPametno.Services
 {
     public interface IMjesecniPlanService

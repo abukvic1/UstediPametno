@@ -1,0 +1,214 @@
+﻿@model IEnumerable<UstediPametno.ViewModels.BedzPrikazViewModel>
+
+@using UstediPametno.Models
+
+@{
+    ViewData["Title"] = "Moji bedževi";
+
+    var stednja = Model
+        .Where(b => b.Vrsta == VrstaBedza.Stednja)
+        .ToList();
+
+    var lojalnost = Model
+        .Where(b => b.Vrsta == VrstaBedza.Lojalnost)
+        .ToList();
+}
+
+<div class="container mt-4">
+
+    <div class="mb-5">
+        <h2>🏆 Moji bedževi</h2>
+
+        <p class="text-muted">
+            Prati svoj napredak i osvajaj nove bedževe.
+        </p>
+    </div>
+
+
+    <h3 class="mb-4">
+        💰 Bedževi štednje
+    </h3>
+
+    <div class="row">
+
+        @foreach (var bedz in stednja)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+
+                <div class="card shadow-sm h-100 text-center">
+
+                    <div class="card-body">
+
+                        <div style="font-size: 55px;">
+                            @if (bedz.Osvojen)
+                            {
+                                @bedz.Ikona
+                            }
+                            else
+                            {
+                                <span style="opacity: 0.35;">
+                                    @bedz.Ikona
+                                </span>
+                            }
+                        </div>
+
+                        <h4 class="mt-3">
+                            @bedz.Naziv
+                        </h4>
+
+                        <p class="text-muted">
+                            @bedz.Opis
+                        </p>
+
+
+                        @if (bedz.Osvojen)
+                        {
+                            <span class="badge bg-success mb-3">
+                                ✓ Osvojen
+                            </span>
+
+                            <div>
+                                <small class="text-muted">
+                                    Osvojen:
+                                    @(bedz.DatumOsvajanja?
+                                        .ToLocalTime()
+                                        .ToString("dd.MM.yyyy."))
+                                </small>
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary mb-3">
+                                🔒 Zaključan
+                            </span>
+
+                            <div class="mb-2">
+                                <strong>
+                                    @bedz.TrenutnaVrijednost.ToString("N0")
+                                    /
+                                    @bedz.Prag.ToString("N0")
+                                    KM
+                                </strong>
+                            </div>
+
+                            <div class="progress"
+                                 style="height: 10px;">
+
+                                <div class="progress-bar"
+                                     role="progressbar"
+                                     style="width: @bedz.NapredakProcenat.ToString("0")%">
+                                </div>
+
+                            </div>
+
+                            <small class="text-muted">
+                                @bedz.NapredakProcenat.ToString("0")%
+                            </small>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+
+    <hr class="my-5" />
+
+
+    <h3 class="mb-4">
+        ⭐ Bedževi vjernosti
+    </h3>
+
+    <div class="row">
+
+        @foreach (var bedz in lojalnost)
+        {
+            <div class="col-md-6 col-lg-4 mb-4">
+
+                <div class="card shadow-sm h-100 text-center">
+
+                    <div class="card-body">
+
+                        <div style="font-size: 55px;">
+
+                            @if (bedz.Osvojen)
+                            {
+                                @bedz.Ikona
+                            }
+                            else
+                            {
+                                <span style="opacity: 0.35;">
+                                    @bedz.Ikona
+                                </span>
+                            }
+
+                        </div>
+
+                        <h4 class="mt-3">
+                            @bedz.Naziv
+                        </h4>
+
+                        <p class="text-muted">
+                            @bedz.Opis
+                        </p>
+
+
+                        @if (bedz.Osvojen)
+                        {
+                            <span class="badge bg-success mb-3">
+                                ✓ Osvojen
+                            </span>
+
+                            <div>
+                                <small class="text-muted">
+                                    Osvojen:
+                                    @(bedz.DatumOsvajanja?
+                                        .ToLocalTime()
+                                        .ToString("dd.MM.yyyy."))
+                                </small>
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary mb-3">
+                                🔒 Zaključan
+                            </span>
+
+                            <div class="mb-2">
+                                <strong>
+                                    @bedz.TrenutnaVrijednost.ToString("N0")
+                                    /
+                                    @bedz.Prag.ToString("N0")
+                                    mjeseci
+                                </strong>
+                            </div>
+
+                            <div class="progress"
+                                 style="height: 10px;">
+
+                                <div class="progress-bar"
+                                     role="progressbar"
+                                     style="width: @bedz.NapredakProcenat.ToString("0")%">
+                                </div>
+
+                            </div>
+
+                            <small class="text-muted">
+                                @bedz.NapredakProcenat.ToString("0")%
+                            </small>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>

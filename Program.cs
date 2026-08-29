@@ -37,6 +37,11 @@ builder.Services.AddScoped<ICiljStednjeService, CiljStednjeService>();
 builder.Services.AddScoped<IMjesecniPlanService, MjesecniPlanService>();
 builder.Services.AddScoped<ITransakcijaService, TransakcijaService>();
 builder.Services.AddScoped<IMjesecniPlanCiljService, MjesecniPlanCiljService>();
+builder.Services.AddScoped<IBedzService, BedzService>();
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // ===============================
 // IDENTITY

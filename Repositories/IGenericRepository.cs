@@ -1,5 +1,7 @@
 ﻿using System.Linq.Expressions;
-
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System;
 namespace UstediPametno.Repositories
 {
     public interface IGenericRepository<T> where T : class

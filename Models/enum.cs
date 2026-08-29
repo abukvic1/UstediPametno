@@ -9,6 +9,11 @@
         Pretplata,
         Ostalo
     }
+    public enum VrstaBedza
+    {
+        Stednja,
+        Lojalnost
+    }
 
     public enum StatusCilja
     {

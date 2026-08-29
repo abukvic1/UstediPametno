@@ -15,16 +15,18 @@ namespace UstediPametno.Controllers
         private readonly ITransakcijaService _transakcijaService;
         private readonly ICiljStednjeService _ciljService;
         private readonly IMjesecniPlanService _planService;
+    
         public HomeController(
-    UserManager<Korisnik> userManager,
-    ITransakcijaService transakcijaService,
-    ICiljStednjeService ciljService,
-    IMjesecniPlanService planService)
+     UserManager<Korisnik> userManager,
+     ITransakcijaService transakcijaService,
+     ICiljStednjeService ciljService,
+     IMjesecniPlanService planService)
         {
             _userManager = userManager;
             _transakcijaService = transakcijaService;
             _ciljService = ciljService;
             _planService = planService;
+          
         }
         public async Task<IActionResult> Index()
         {
@@ -40,7 +42,7 @@ namespace UstediPametno.Controllers
             {
                 return Challenge();
             }
-
+            
             DateTime danas =
                 DateTime.Today;
 
@@ -259,6 +261,7 @@ namespace UstediPametno.Controllers
 
             return View(model);
         }
+       
         public IActionResult Privacy()
         {
             return View();

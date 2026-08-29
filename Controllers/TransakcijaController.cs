@@ -113,7 +113,38 @@ namespace UstediPametno.Controllers
                 })
                 .ToList();
 
-            return View(model);
+            decimal ukupniPrihodi = transakcije
+      .Where(t => t.Vrsta == VrstaTransakcije.Prihod)
+      .Sum(t => t.Iznos);
+
+            decimal ukupniRashodi = transakcije
+                .Where(t =>
+                    t.Vrsta == VrstaTransakcije.FiksniTrosak ||
+                    t.Vrsta == VrstaTransakcije.DnevnaPotrosnja)
+                .Sum(t => t.Iznos);
+
+            decimal ukupnoUstedjeno = transakcije
+                .Where(t => t.Vrsta == VrstaTransakcije.UplataStednje)
+                .Sum(t => t.Iznos);
+
+            decimal raspolozivo =
+                ukupniPrihodi
+                - ukupniRashodi
+                - ukupnoUstedjeno;
+
+            raspolozivo = Math.Max(0, raspolozivo);
+
+            TransakcijeIndexViewModel viewModel =
+                new TransakcijeIndexViewModel
+                {
+                    Transakcije = model,
+                    UkupniPrihodi = ukupniPrihodi,
+                    UkupniRashodi = ukupniRashodi,
+                    UkupnoUstedjeno = ukupnoUstedjeno,
+                    Raspolozivo = raspolozivo
+                };
+
+            return View(viewModel);
         }
 
         [HttpGet]

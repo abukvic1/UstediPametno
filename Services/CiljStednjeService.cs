@@ -197,16 +197,7 @@ namespace UstediPametno.Services
                     $"{preostaliIznos:N2} KM.");
             }
 
-            decimal raspolozivo =
-                await IzracunajRaspolozivaSredstvaAsync(
-                    korisnikId);
-
-            if (iznos > raspolozivo)
-            {
-                throw new InvalidOperationException(
-                    $"Nemate dovoljno raspoloživih sredstava. " +
-                    $"Trenutno imate {raspolozivo:N2} KM.");
-            }
+           
 
             postojeci.TrenutnoUstedjeno += iznos;
 

@@ -1,5 +1,12 @@
 ﻿using UstediPametno.Models;
 using UstediPametno.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
+using UstediPametno.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace UstediPametno.Services
 {
@@ -8,15 +15,18 @@ namespace UstediPametno.Services
         private readonly IGenericRepository<Transakcija> _repository;
         private readonly IMjesecniPlanService _planService;
         private readonly ICiljStednjeService _ciljService;
+        private readonly IBedzService _bedzService;
 
         public TransakcijaService(
-            IGenericRepository<Transakcija> repository,
-            IMjesecniPlanService planService,
-            ICiljStednjeService ciljService)
+     IGenericRepository<Transakcija> repository,
+     IMjesecniPlanService planService,
+     ICiljStednjeService ciljService,
+     IBedzService bedzService)
         {
             _repository = repository;
             _planService = planService;
             _ciljService = ciljService;
+            _bedzService = bedzService;
         }
 
         public async Task<IEnumerable<Transakcija>> GetAllAsync(
@@ -69,7 +79,8 @@ namespace UstediPametno.Services
     korisnikId);
             ValidirajOsnovnePodatke(transakcija);
             if (transakcija.Vrsta == VrstaTransakcije.FiksniTrosak ||
-    transakcija.Vrsta == VrstaTransakcije.DnevnaPotrosnja)
+     transakcija.Vrsta == VrstaTransakcije.DnevnaPotrosnja ||
+     transakcija.Vrsta == VrstaTransakcije.UplataStednje)
             {
                 decimal raspolozivo =
                     await IzracunajRaspolozivoAsync(korisnikId);
@@ -99,6 +110,10 @@ namespace UstediPametno.Services
 
             await _repository.AddAsync(transakcija);
             await _repository.SaveChangesAsync();
+            if (transakcija.Vrsta == VrstaTransakcije.UplataStednje)
+            {
+                await _bedzService.ProvjeriBedzeveAsync(korisnikId);
+            }
 
             await AzurirajPlanAsync(
                 transakcija.MjesecniPlanId,
